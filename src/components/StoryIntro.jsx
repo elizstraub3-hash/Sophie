@@ -4,6 +4,7 @@ import { EVENT, STORY } from '../config/event.js'
 import { chime, fanfare, sparkle } from '../lib/sfx.js'
 import { burstFrom, rain } from '../lib/glitter.js'
 import { PuffyStar } from './UnlockGame.jsx'
+import { Bow } from './Decor.jsx'
 
 const fill = (t) => (t || '').replaceAll('{nome}', EVENT.childFirstName)
 const RATIO_V = 720 / 1280
@@ -226,7 +227,7 @@ export default function StoryIntro({ onDone, onLeave, onFirstTap }) {
   }, [scenes])
 
   useEffect(() => {
-    btnRef.current?.focus()
+    btnRef.current?.focus({ preventScroll: true })
     const onKey = (e) => e.key === 'Escape' && finish()
     window.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
@@ -256,37 +257,68 @@ export default function StoryIntro({ onDone, onLeave, onFirstTap }) {
       role="dialog"
       aria-modal="true"
       aria-label={`Historinha: O Reino Encantado da ${EVENT.childFirstName}`}
-      className="fixed inset-0 z-[80] overflow-hidden bg-[#2B1D4A] text-white"
+      className="fixed inset-0 z-[80] overflow-hidden bg-[#F6D6EC] text-white"
       animate={leaving ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
     >
-      {/* tela de título */}
+      {/* tela de boas-vindas: envelope + Layla + Aniversário da Sophie */}
       {i < 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
-          <img src={scenes[0].image} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#2B1D4A]/30 via-[#2B1D4A]/45 to-[#2B1D4A]/70" />
-          <m.p className="relative font-sans text-xs font-bold uppercase tracking-[0.4em] text-white" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }}>
-            Uma historinha mágica
-          </m.p>
-          <m.p className="relative mt-3 font-bubble bubble-story text-[clamp(1.9rem,8.6vw,2.7rem)] leading-tight" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, delay: 0.3 }}>
-            O Reino Encantado da {EVENT.childFirstName}
-          </m.p>
-          <p className="story-caption relative mt-4 max-w-[26ch] text-lg">Ajude a {EVENT.childFirstName} a encontrar as 5 estrelinhas para ganhar o seu vestido! ⭐</p>
-          <m.button
-            ref={btnRef}
-            type="button"
-            onClick={begin}
-            className="btn-magic relative mt-8 min-h-[58px] px-9 text-lg"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: [0, -5, 0] }}
-            transition={{ opacity: { delay: 1 }, y: { duration: 2.4, repeat: Infinity } }}
-          >
-            ▶ Começar a história
-          </m.button>
-          <p className="relative mt-3 font-sans text-sm font-semibold text-white">Ligue o som 🔊</p>
-          <button type="button" onClick={finish} className="relative mt-6 min-h-[44px] rounded-full bg-black/25 px-5 font-sans text-sm font-semibold text-white ring-1 ring-white/60">
-            Pular história ›
-          </button>
+        <div className="absolute inset-0 overflow-y-auto bg-gradient-to-b from-[#E9D9FB] via-[#F6D6EC] to-[#F8CDE3]">
+          <div className="absolute inset-0 bg-[url('/img/pattern-lilas.webp')] bg-cover bg-center opacity-35" aria-hidden="true" />
+          <div className="story-stars pointer-events-none absolute inset-0 opacity-70" aria-hidden="true" />
+          <div className="relative mx-auto flex min-h-full max-w-md flex-col items-center justify-center px-5 pb-6 pt-[max(0.8rem,env(safe-area-inset-top))] text-center">
+            <m.img
+              src="/img/titulo-sophie.webp"
+              alt={`Aniversário da ${EVENT.childFirstName} — ${EVENT.age} anos`}
+              className="h-[min(24svh,13rem)] w-auto drop-shadow-[0_10px_16px_rgba(150,80,140,.3)]"
+              initial={{ opacity: 0, y: -16, scale: 0.9 }}
+              animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
+              transition={{ opacity: { duration: 0.8 }, scale: { duration: 0.8 }, y: { duration: 4, repeat: Infinity, ease: 'easeInOut' } }}
+            />
+
+            {/* envelope com a Layla espiando */}
+            <m.div className="relative mt-2 w-full max-w-[21rem]" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, type: 'spring', stiffness: 90, damping: 14 }}>
+              <m.img
+                src="/img/layla/layla-acenando.webp"
+                alt="Layla, a unicórnio da Sophie"
+                className="relative z-10 mx-auto -mb-9 h-[min(14svh,7.5rem)] w-auto drop-shadow-[0_8px_10px_rgba(150,80,140,.3)]"
+                animate={reduce ? undefined : { y: [0, -8, 0], rotate: [-3, 3, -3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <div className="relative rounded-[1.6rem] bg-[#FFF8F0] px-5 pb-4 pt-10 shadow-[0_18px_40px_-14px_rgba(150,70,140,.55)] ring-4 ring-[#EBCB85]">
+                <span className="absolute left-4 top-4 text-xl text-[#E3B65C]" aria-hidden="true">♡</span>
+                <span className="absolute right-4 top-4 text-xl text-[#E3B65C]" aria-hidden="true">♡</span>
+                <p className="font-bubble bubble-pink text-[2.2rem] normal-case leading-none">Olá!</p>
+                <p className="mt-2 font-sans text-lg font-bold leading-snug text-[#7B2E9E]">
+                  Você recebeu um convite <br />muito especial da
+                </p>
+                <p className="mt-1 font-bubble bubble-pink text-[2.6rem] leading-none">{EVENT.childFirstName}!</p>
+                <p className="mt-3 font-sans text-sm font-semibold text-ameixaSoft">Ajude a {EVENT.childFirstName} a encontrar 5 estrelinhas mágicas ⭐</p>
+              </div>
+              {/* aba do envelope + laço */}
+              <div className="relative -mt-3 h-10 overflow-hidden rounded-b-[1.6rem]" aria-hidden="true">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#F7B8D6] to-[#EFA0C6]" />
+                <div className="absolute left-1/2 top-0 h-0 w-0 -translate-x-1/2 border-x-[10.5rem] border-t-[2.5rem] border-x-transparent border-t-[#F9C9DF]" />
+              </div>
+              <Bow className="absolute -bottom-4 left-1/2 h-10 w-16 -translate-x-1/2 drop-shadow" fill="#EC5FA3" />
+            </m.div>
+
+            <m.button
+              ref={btnRef}
+              type="button"
+              onClick={begin}
+              className="btn-magic relative mt-7 min-h-[60px] w-full max-w-[20rem] text-xl"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, scale: reduce ? 1 : [1, 1.04, 1] }}
+              transition={{ opacity: { delay: 0.9 }, scale: { duration: 1.8, repeat: Infinity } }}
+            >
+              💌 Desbloquear meu convite
+            </m.button>
+            <p className="mt-4 font-sans text-sm font-bold text-[#7B2E9E]">👆 Toque no botão para começar · ligue o som 🔊</p>
+            <button type="button" onClick={finish} className="mt-3 min-h-[44px] rounded-full bg-white/70 px-5 font-sans text-sm font-semibold text-ameixa ring-1 ring-white">
+              Pular a historinha ›
+            </button>
+          </div>
         </div>
       )}
 
