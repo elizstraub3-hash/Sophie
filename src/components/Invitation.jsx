@@ -2,9 +2,6 @@ import { m } from 'framer-motion'
 import { useRef } from 'react'
 import { EVENT, CHILD_IMAGES, TEXT_ART } from '../config/event.js'
 import Float from './Float.jsx'
-import Unicorn3D from './Unicorn3D.jsx'
-import { burstFrom } from '../lib/glitter.js'
-import { sparkle } from '../lib/sfx.js'
 import Reveal from './Reveal.jsx'
 import { Divider, Twinkles, DriftCloud, Cloud } from './Decor.jsx'
 import Pattern from './Pattern.jsx'
@@ -46,30 +43,10 @@ export default function Invitation({ music }) {
               />
               <Twinkles items={[[80, 18, 22, 0], [86, 30, 12, 0.7, '#E58DB8'], [12, 40, 16, 0.4, '#B9A4E6'], [16, 70, 12, 1.1], [84, 62, 14, 0.9, '#9FD3E6']]} />
             </m.div>
-          ) : (
-            <m.div
-              ref={uniRef}
-              className="relative mx-auto aspect-square w-[88%]"
-              initial={{ opacity: 0, y: 40, scale: 0.85 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ type: 'spring', stiffness: 90, damping: 14 }}
-            >
-              <Unicorn3D
-                className="h-full w-full"
-                label="Unicórnio da Sophie"
-                onPet={() => {
-                  sparkle()
-                  burstFrom(uniRef.current, { count: 50, speed: 8 })
-                }}
-              />
-            </m.div>
-          )}
-          {!CHILD_IMAGES.photo && <Cloud className="pointer-events-none relative mx-auto -mt-16 h-auto w-[92%] drop-shadow-[0_6px_8px_rgba(190,150,200,.25)]" shade="#EFE4F6" />}
+          ) : null}
         </div>
 
         <Reveal delay={0.1}>
-          {!CHILD_IMAGES.photo && <p className="mt-1 font-sans text-sm text-ameixaSoft">Toque no unicórnio para fazer carinho 💕</p>}
           {TEXT_ART.invite?.src ? (
             <h2 id="convite-titulo" className="mt-3">
               <Float y={8} duration={4.5} rotate={0.8}>

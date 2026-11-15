@@ -1,4 +1,5 @@
 import { m, AnimatePresence, useReducedMotion } from 'framer-motion'
+import Loop, { floatFrames, pulseFrames } from './Loop.jsx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { EVENT, STORY } from '../config/event.js'
 import { chime, fanfare, sparkle } from '../lib/sfx.js'
@@ -219,12 +220,14 @@ export default function StoryIntro({ onDone, onLeave, onFirstTap }) {
     return () => clearTimeout(t)
   }, [timeDone, pending, i, leaving, next, scenes])
 
+  // pré-carrega só as próximas 2 cenas (não as 9 de uma vez → abre mais rápido)
   useEffect(() => {
-    scenes.forEach((sc) => [sc.image, sc.bg].filter(Boolean).forEach((src) => {
+    scenes.slice(i + 1, i + 3).forEach((sc) => [sc.image, sc.bg].filter(Boolean).forEach((src) => {
       const im = new Image()
+      im.decoding = 'async'
       im.src = src
     }))
-  }, [scenes])
+  }, [scenes, i])
 
   useEffect(() => {
     btnRef.current?.focus({ preventScroll: true })
@@ -271,19 +274,20 @@ export default function StoryIntro({ onDone, onLeave, onFirstTap }) {
               src="/img/titulo-sophie.webp"
               alt={`Aniversário da ${EVENT.childFirstName} — ${EVENT.age} anos`}
               className="h-[min(24svh,13rem)] w-auto drop-shadow-[0_10px_16px_rgba(150,80,140,.3)]"
-              initial={{ opacity: 0, y: -16, scale: 0.9 }}
-              animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
-              transition={{ opacity: { duration: 0.8 }, scale: { duration: 0.8 }, y: { duration: 4, repeat: Infinity, ease: 'easeInOut' } }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
             />
 
             {/* envelope com a Layla espiando */}
             <m.div className="relative mt-2 w-full max-w-[21rem]" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, type: 'spring', stiffness: 90, damping: 14 }}>
-              <m.img
+              <Loop
+                as="img"
                 src="/img/layla/layla-acenando.webp"
                 alt="Layla, a unicórnio da Sophie"
                 className="relative z-10 mx-auto -mb-9 h-[min(14svh,7.5rem)] w-auto drop-shadow-[0_8px_10px_rgba(150,80,140,.3)]"
-                animate={reduce ? undefined : { y: [0, -8, 0], rotate: [-3, 3, -3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                frames={floatFrames(8, 3)}
+                duration={3}
               />
               <div className="relative rounded-[1.6rem] bg-[#FFF8F0] px-5 pb-4 pt-10 shadow-[0_18px_40px_-14px_rgba(150,70,140,.55)] ring-4 ring-[#EBCB85]">
                 <span className="absolute left-4 top-4 text-xl text-[#E3B65C]" aria-hidden="true">♡</span>
@@ -303,17 +307,19 @@ export default function StoryIntro({ onDone, onLeave, onFirstTap }) {
               <Bow className="absolute -bottom-4 left-1/2 h-10 w-16 -translate-x-1/2 drop-shadow" fill="#EC5FA3" />
             </m.div>
 
+            <Loop className="mt-7 flex w-full justify-center" frames={pulseFrames(1.04)} duration={1.8}>
             <m.button
               ref={btnRef}
               type="button"
               onClick={begin}
-              className="btn-magic relative mt-7 min-h-[60px] w-full max-w-[20rem] text-xl"
+              className="btn-magic relative min-h-[60px] w-full max-w-[20rem] text-xl"
               initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, scale: reduce ? 1 : [1, 1.04, 1] }}
-              transition={{ opacity: { delay: 0.9 }, scale: { duration: 1.8, repeat: Infinity } }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
             >
               💌 Desbloquear meu convite
             </m.button>
+            </Loop>
             <p className="mt-4 font-sans text-sm font-bold text-[#7B2E9E]">👆 Toque no botão para começar · ligue o som 🔊</p>
             <button type="button" onClick={finish} className="mt-3 min-h-[44px] rounded-full bg-white/70 px-5 font-sans text-sm font-semibold text-ameixa ring-1 ring-white">
               Pular a historinha ›

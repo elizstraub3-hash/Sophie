@@ -1,4 +1,5 @@
 import { m, AnimatePresence, useReducedMotion } from 'framer-motion'
+import Loop, { floatFrames, pulseFrames } from './Loop.jsx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { EVENT, CHILD_IMAGES, BACKGROUNDS } from '../config/event.js'
 import { chime, fanfare, sparkle } from '../lib/sfx.js'
@@ -304,15 +305,16 @@ export default function UnlockGame({ unlocked, onUnlock, onSkip, onContinue }) {
 
           <AnimatePresence>
             {phase === 'ready' && (
-              <m.div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80 p-6 backdrop-blur-[2px]" exit={{ opacity: 0 }}>
-                <m.img
+              <m.div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/85 p-6" exit={{ opacity: 0 }}>
+                <Loop
+                  as="img"
                   key={player.id}
                   src={player.img}
                   alt=""
                   aria-hidden="true"
                   className="h-28 w-auto drop-shadow-[0_8px_10px_rgba(150,100,160,.35)]"
-                  animate={reduce ? undefined : { y: [0, -18, 0] }}
-                  transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
+                  frames={floatFrames(18)}
+                  duration={0.9}
                 />
                 <p className="mt-3 max-w-[24ch] font-sans text-lg font-bold leading-snug text-ameixa [text-shadow:0_1px_0_#fff,0_0_8px_#fff]">
                   Quer conseguir as 5 estrelinhas e ganhar {player.id === 'layla' ? 'a sua coroa' : 'o seu vestido'} mágico? {player.id === 'layla' ? '👑' : '👗'}
@@ -349,7 +351,7 @@ export default function UnlockGame({ unlocked, onUnlock, onSkip, onContinue }) {
           <AnimatePresence>
             {phase === 'won' && (
               <m.div
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/75 p-5 backdrop-blur-[2px]"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/85 p-5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: reduce ? 0 : 0.2 }}

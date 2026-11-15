@@ -1,17 +1,10 @@
-import { m } from 'framer-motion'
+import Loop, { floatFrames } from './Loop.jsx'
 
-/**
- * Flutuação suave e lenta (só transform → leve no celular).
- * Com "reduzir movimento" ligado, o MotionConfig desliga sozinho.
- */
+/** Flutuação suave e lenta (Web Animations → GPU, pausa fora da tela). */
 export default function Float({ children, className = '', y = 6, duration = 5, delay = 0, rotate = 0 }) {
   return (
-    <m.div
-      className={className}
-      animate={{ y: [0, -y, 0], rotate: rotate ? [-rotate, rotate, -rotate] : 0 }}
-      transition={{ duration, delay, repeat: Infinity, ease: 'easeInOut' }}
-    >
+    <Loop className={className} frames={floatFrames(y, rotate)} duration={duration} delay={delay}>
       {children}
-    </m.div>
+    </Loop>
   )
 }

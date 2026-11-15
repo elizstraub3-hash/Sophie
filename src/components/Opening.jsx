@@ -1,4 +1,5 @@
 import { m, useReducedMotion } from 'framer-motion'
+import Loop, { floatFrames, pulseFrames } from './Loop.jsx'
 import { useRef, useState } from 'react'
 import { EVENT, TITLE_ART, BACKGROUNDS } from '../config/event.js'
 import { DriftCloud, Rainbow, Twinkles, Heart, CloudEdge } from './Decor.jsx'
@@ -113,6 +114,7 @@ export default function Opening({ opened, onOpen }) {
         >
           <div aria-hidden="true" className="absolute inset-x-[-12%] bottom-[2%] h-[38%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,.95)_0%,rgba(255,255,255,.7)_45%,rgba(255,255,255,0)_70%)]" />
           <button type="button" onClick={petUnicorn} aria-label="Layla, a unicórnio da Sophie — toque para fazer carinho" className="relative block h-full w-full" style={{ touchAction: 'manipulation' }}>
+            <Loop className="h-full w-full" frames={floatFrames(6)} duration={2.6}>
             <m.img
               key={hop}
               src="/img/layla/layla-acenando.webp"
@@ -120,9 +122,10 @@ export default function Opening({ opened, onOpen }) {
               draggable="false"
               className="pointer-events-none mx-auto h-full w-auto object-contain drop-shadow-[0_12px_14px_rgba(190,120,170,.35)]"
               initial={false}
-              animate={reduce ? undefined : hop ? { y: [0, -34, 6, 0], rotate: [0, -6, 4, 0], scaleY: [1, 1.05, 0.92, 1] } : { y: [0, -6, 0] }}
-              transition={hop ? { duration: 0.75, ease: 'easeOut' } : { duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+              animate={reduce || !hop ? undefined : { y: [0, -34, 6, 0], rotate: [0, -6, 4, 0], scaleY: [1, 1.05, 0.92, 1] }}
+              transition={{ duration: 0.75, ease: 'easeOut' }}
             />
+            </Loop>
           </button>
         </m.div>
 

@@ -1,5 +1,5 @@
-import { m, useReducedMotion } from 'framer-motion'
 import { Sparkle } from './Unicorn.jsx'
+import Loop from './Loop.jsx'
 
 /** Nuvem fofinha em SVG */
 export function Cloud({ className = '', tone = '#FFFFFF', shade = '#F3EAF6' }) {
@@ -13,16 +13,16 @@ export function Cloud({ className = '', tone = '#FFFFFF', shade = '#F3EAF6' }) {
 
 /** Nuvem que flutua lentamente (transform-only → leve) */
 export function DriftCloud({ className = '', distance = 24, duration = 9, delay = 0, ...rest }) {
-  const reduce = useReducedMotion()
   return (
-    <m.div
+    <Loop
       className={`pointer-events-none absolute ${className}`}
       aria-hidden="true"
-      animate={reduce ? undefined : { x: [0, distance, 0], y: [0, -4, 0] }}
-      transition={{ duration, delay, repeat: Infinity, ease: 'easeInOut' }}
+      frames={[{ transform: 'translate(0px,0px)' }, { transform: `translate(${distance}px,-4px)` }, { transform: 'translate(0px,0px)' }]}
+      duration={duration}
+      delay={delay}
     >
       <Cloud className="h-full w-full" {...rest} />
-    </m.div>
+    </Loop>
   )
 }
 
@@ -39,20 +39,26 @@ export function Rainbow({ className = '' }) {
 }
 
 /** Estrelinhas piscando espalhadas */
+const TWINKLE = [
+  { opacity: 0.35, transform: 'scale(.85)' },
+  { opacity: 1, transform: 'scale(1.1)' },
+  { opacity: 0.35, transform: 'scale(.85)' },
+]
 export function Twinkles({ items }) {
-  const reduce = useReducedMotion()
   return items.map(([left, top, size, delay, color], i) => (
-    <m.svg
+    <Loop
+      as="svg"
       key={i}
       viewBox="-12 -12 24 24"
       className="pointer-events-none absolute"
       style={{ left: `${left}%`, top: `${top}%`, width: size, height: size }}
       aria-hidden="true"
-      animate={reduce ? undefined : { opacity: [0.35, 1, 0.35], scale: [0.85, 1.1, 0.85] }}
-      transition={{ duration: 2.6, delay, repeat: Infinity, ease: 'easeInOut' }}
+      frames={TWINKLE}
+      duration={2.6}
+      delay={delay}
     >
       <Sparkle x={0} y={0} s={11} fill={color || '#EBCB85'} />
-    </m.svg>
+    </Loop>
   ))
 }
 

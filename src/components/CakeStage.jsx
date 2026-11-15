@@ -1,4 +1,5 @@
 import { m, AnimatePresence, useReducedMotion } from 'framer-motion'
+import Loop, { floatFrames, pulseFrames } from './Loop.jsx'
 import { useRef, useState } from 'react'
 import { EVENT, CAKE } from '../config/event.js'
 import { burstFrom, rain } from '../lib/glitter.js'
@@ -188,9 +189,9 @@ export default function CakeStage() {
             </m.div>
           ) : (
             <m.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <m.p className="font-sans text-lg font-semibold text-ameixa" animate={reduce ? undefined : { scale: [1, 1.05, 1] }} transition={{ duration: 1.6, repeat: Infinity }}>
+              <Loop as="p" className="font-sans text-lg font-semibold text-ameixa" frames={pulseFrames(1.05)} duration={1.6}>
                 👆 Toque nas velinhas para assoprar!
-              </m.p>
+              </Loop>
               <p className="font-sans text-sm text-ameixaSoft">
                 Faltam {litCount} {litCount === 1 ? 'velinha' : 'velinhas'}
               </p>

@@ -1,4 +1,5 @@
 import { m, useReducedMotion } from 'framer-motion'
+import Loop, { floatFrames, pulseFrames } from './Loop.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { burstFrom } from '../lib/glitter.js'
 import { EVENT, BACKGROUNDS, TEXT_ART } from '../config/event.js'
@@ -84,6 +85,7 @@ export default function Finale() {
             transition={{ type: 'spring', stiffness: 80, damping: 14 }}
           >
             <button ref={laylaRef} type="button" onClick={play} aria-label="Layla, a unicórnio da Sophie — toque para ouvir" className="relative block w-full" style={{ touchAction: 'manipulation' }}>
+              <Loop frames={floatFrames(10)} duration={4.5}>
               <m.img
                 key={neigh}
                 src="/img/layla/layla-rindo.webp"
@@ -95,9 +97,10 @@ export default function Finale() {
                 draggable="false"
                 className="pointer-events-none h-auto w-full origin-bottom drop-shadow-[0_16px_20px_rgba(190,140,190,.35)]"
                 initial={false}
-                animate={reduce ? undefined : neigh ? { rotate: [0, -10, 4, -6, 0], y: [0, -26, 0, -12, 0], scaleY: [1, 1.06, 0.95, 1.03, 1] } : { y: [0, -10, 0] }}
-                transition={neigh ? { duration: 1.4, ease: 'easeOut' } : { duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                animate={reduce || !neigh ? undefined : { rotate: [0, -10, 4, -6, 0], y: [0, -26, 0, -12, 0], scaleY: [1, 1.06, 0.95, 1.03, 1] }}
+                transition={{ duration: 1.4, ease: 'easeOut' }}
               />
+              </Loop>
             </button>
           </m.div>
           <Cloud className="pointer-events-none relative -mt-10 h-auto w-full drop-shadow-md" />
@@ -110,9 +113,9 @@ export default function Finale() {
           </p>
           <div className="mt-3 flex justify-center gap-2" aria-hidden="true">
             {['#E58DB8', '#B9A4E6', '#9FD3E6', '#A8D8B5', '#EBCB85'].map((c, i) => (
-              <m.span key={c} animate={reduce ? undefined : { y: [0, -6, 0] }} transition={{ duration: 1.6, delay: i * 0.15, repeat: Infinity }}>
+              <Loop as="span" key={c} frames={floatFrames(6)} duration={1.6} delay={i * 0.15}>
                 <Heart className="h-4 w-4" fill={c} />
-              </m.span>
+              </Loop>
             ))}
           </div>
           <a href="#abertura" onClick={(e) => { e.preventDefault(); scrollToSection('abertura') }} className="btn-ghost mt-8 inline-flex min-h-[48px] px-6">Voltar ao início ↑</a>
