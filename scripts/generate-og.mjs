@@ -29,26 +29,29 @@ const font = (pkg, file) => `data:font/woff2;base64,${readFileSync(path.join(roo
 const bg = data(BACKGROUNDS.opening || BACKGROUNDS.finale || '')
 const title = data(TITLE_ART.src || '')
 const uni = data('/img/layla/layla-sentada.webp')
+const layla = data('/img/layla/layla-acenando.webp')
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Fredoka;font-weight:600;src:url(${font('fredoka', 'fredoka-latin-600-normal.woff2')})}
-body{margin:0} .c{width:1200px;height:630px;position:relative;overflow:hidden;font-family:Fredoka;
-background:linear-gradient(160deg,#CDECF7,#E6E0FA 45%,#F8CDE3)}
-.bg{position:absolute;inset:0;background:url(${bg}) center/cover}
-.veil{position:absolute;inset:0;background:rgba(255,250,252,.55)}
-.spot{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 40% 50%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%)}
-.title{position:absolute;left:60px;top:12px;height:606px}
-.uni{position:absolute;right:60px;bottom:80px;height:400px}
-.pill{position:absolute;right:46px;bottom:34px;background:rgba(255,255,255,.92);border-radius:999px;padding:12px 28px;
-font-size:30px;font-weight:600;color:#5E4466;box-shadow:0 10px 24px -12px rgba(150,100,160,.6)}
-</style></head><body><div class="c">${bg ? '<div class="bg"></div><div class="veil"></div>' : ''}<div class="spot"></div>
-${title ? `<img class="title" src="${title}">` : ''}<img class="uni" src="${uni}">
-<div class="pill">Domingo, 13/12 · ${EVENT.startsAt.slice(11, 16).replace(':', 'h')}</div></div></body></html>`
+@font-face{font-family:Fredoka;font-weight:700;src:url(${font('fredoka', 'fredoka-latin-700-normal.woff2')})}
+body{margin:0} .c{width:1200px;height:630px;position:relative;overflow:hidden;font-family:Fredoka;background:linear-gradient(160deg,#E9D9FB,#F6D6EC 50%,#F8CDE3)}
+.bg{position:absolute;inset:0;background:url(${bg}) center/cover;opacity:.45}
+.title{position:absolute;left:30px;top:40px;height:330px}
+.layla{position:absolute;left:150px;bottom:20px;height:250px}
+.card{position:absolute;right:50px;top:70px;width:640px;height:490px;border-radius:44px;background:#FFF8F0;border:10px solid #EBCB85;box-shadow:0 30px 60px -20px rgba(150,70,140,.55);text-align:center;box-sizing:border-box;padding:48px 40px}
+.ola{font-size:78px;font-weight:700;color:#E0479A;line-height:1;text-shadow:0 4px 0 #fff,0 7px 0 rgba(214,160,205,.9)}
+.t{font-size:44px;font-weight:700;color:#7B2E9E;line-height:1.2;margin-top:18px}
+.n{font-size:96px;font-weight:700;color:#E0479A;line-height:1;margin-top:6px;text-transform:uppercase;text-shadow:0 4px 0 #fff,0 8px 0 rgba(214,160,205,.9)}
+.btn{position:absolute;left:50%;transform:translateX(-50%);bottom:-46px;white-space:nowrap;background:linear-gradient(135deg,#e374ae,#ad84e3 55%,#6fb6d9);color:#fff;font-size:44px;font-weight:700;padding:18px 54px;border-radius:999px;border:7px solid #fff;box-shadow:0 14px 30px -10px rgba(150,60,140,.7)}
+</style></head><body><div class="c">${bg ? '<div class="bg"></div>' : ''}
+${title ? `<img class="title" src="${title}">` : ''}<img class="layla" src="${layla}">
+<div class="card"><div class="ola">Olá!</div><div class="t">Você recebeu um convite<br>muito especial da</div><div class="n">${EVENT.childFirstName}!</div>
+<div class="btn">👆 Clique aqui ✨</div></div></div></body></html>`
 
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } })
 await page.setContent(html, { waitUntil: 'load' })
 await page.evaluate(() => document.fonts.ready)
-await page.screenshot({ path: path.join(root, 'public/og-cover.jpg'), type: 'jpeg', quality: 84 })
+await page.screenshot({ path: path.join(root, 'public/og-convite-sophie.jpg'), type: 'jpeg', quality: 84 })
 await page.setViewportSize({ width: 180, height: 180 })
 await page.setContent(`<body style="margin:0;background:linear-gradient(160deg,#E6E0FA,#F8CDE3)"><img src="${uni}" style="width:180px;height:180px;object-fit:contain"></body>`, { waitUntil: 'load' })
 await page.screenshot({ path: path.join(root, 'public/apple-touch-icon.png') })

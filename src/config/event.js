@@ -263,11 +263,10 @@ export const SCRATCH_CARDS = {
  * ogImage: caminho de uma imagem em /public (1200×630, JPG/PNG < 300 KB).
  */
 export const SHARE = {
-  siteUrl: '',
-  title: 'O Mundo Encantado da Sophie · 5 anos',
-  description:
-    'Você é nosso convidado especial! Domingo, 13/12 às 11h30, na Chácara Recanto da Família. Toque para abrir o convite mágico ✨',
-  ogImage: '/og-cover.jpg',
-  ogImageAlt: 'Convite O Mundo Encantado da Sophie — unicórnio, arco-íris e nuvens em tons pastel',
+  siteUrl: 'https://sophie5anos.vercel.app',
+  title: '💌 Você recebeu um convite especial da Sophie!',
+  description: '✨ Clique aqui para abrir o seu convite mágico! Aniversário de 5 anos · Domingo, 13/12 às 11h30 🦄',
+  ogImage: '/og-convite-sophie.jpg',
+  ogImageAlt: 'Você recebeu um convite especial da Sophie — clique aqui',
   themeColor: '#F8CDE3',
 }
